@@ -87,4 +87,12 @@ More detail (file map, request flow, interview prep): `docs/WALKTHROUGH.md`. Des
 Errors are always `{ "error": { "code", "message", ...extra } }`; 409 conflicts include `current` (latest item) so the client can reconcile.
 
 ## Known limitations
-See the end of `ENGINEERING_DECISIONS.md`.
+- **Auth:** simple email+password with a 12 h JWT in `localStorage` (XSS-exposed; production would use httpOnly cookies, refresh tokens, rate limiting/lockout, and SSO). Demo passwords are public.
+- **Conflict handling** is whole-item: if two people edit *different* fields of the same item, the second still gets a conflict and must reload (no field-level merge).
+- **Idempotency keys and finished/failed jobs are never purged**; `activity_events` is a single growing table (would partition by time / archive at 10×).
+- **Dashboard counts** run 4 indexed count queries per refresh; at much larger scale they should be cached or maintained incrementally.
+- **Search** is stemmed full-text only (no typo tolerance/prefix); a dedicated engine (OpenSearch) would come first at 10×.
+- **Polling** instead of push; no tab-to-tab live updates inside the 10–20 s window.
+- **Notifications** are in-app only; failed jobs are visible only in the `jobs` table (no admin UI or alerting).
+- **Tests** run against a real Postgres but there are no browser/UI tests (the optimistic-rollback path is verified manually). The Docker image was not run in the authoring environment; run `docker compose up --build` from a fresh clone before submitting.
+
