@@ -31,12 +31,6 @@ This starts Postgres, the API (applies migrations, seeds 4 teams / 10 users / 5,
 | `member6@demo.test` | member in Compliance |
 | `viewer@demo.test` | viewer (read-only) in all teams |
 
-### 2-minute demo script
-1. Sign in as `member1`, open **Unassigned urgent**, open an Engineering item, **Claim** it (optimistic UI).
-2. In a second browser/incognito sign in as `member2`, open the same item *before* member1 claims → the loser gets "Already claimed by …" and the UI rolls back.
-3. As the owner click **Submit for approval**. Sign in as `lead1` → **Awaiting my approval** → approve. Try approving as the assignee (blocked: four-eyes rule).
-4. Open the same item in two tabs, edit the title in both, save both → the second shows the **version conflict** banner and keeps your draft.
-5. Bell icon: notifications were created asynchronously by the worker.
 
 ## Run without Docker (development)
 
